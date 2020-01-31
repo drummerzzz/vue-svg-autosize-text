@@ -4,6 +4,7 @@ function getConfig(mod, cfg) {
 	const ret = {
 		'plain': !cfg.plain ? false : true,
 		'width': null || cfg.width,
+		'height': 200 || cfg.height,
 		'align': cfg.align === 'none' || cfg.align === false ? false : (alignments[cfg.align] ? cfg.align : 'baseline'),
 		'lineHeight': cfg.lineHeight || '1.125em',
 		'paddingLeft': !cfg.paddingLeft ? (!cfg.padding ? 0 : cfg.padding) : cfg.paddingLeft,
@@ -31,6 +32,8 @@ function getConfig(mod, cfg) {
 function newLine(el, span, config) {
 	const tmp = span.cloneNode();
 	el.insertBefore(tmp, span.nextSibling);
+	// let size = el.getAttribute('font-size');
+	// el.setAttribute('font-size', 10);
 	span.style.display = '';
 	tmp.removeAttribute('y');
 	tmp.setAttribute('dy', config.lineHeight);
@@ -49,8 +52,11 @@ function newLine(el, span, config) {
 function set(el, text, config) {
 	el[config.plain ? 'textContent' : 'innerHTML'] = text || '';
 	const pscale = config.physicalMeasurement ? 1 : el.__OWNING_SVG.viewBox.animVal.width / el.__OWNING_SVG.getBoundingClientRect().width;
+	const hpscale = config.physicalMeasurement ? 1 : el.__OWNING_SVG.viewBox.animVal.height / el.__OWNING_SVG.getBoundingClientRect().height;
 	const h0 = el.getBoundingClientRect().height;
 	const plain = [];
+	let fontSize = 30;
+	el.setAttribute('font-size', fontSize);
 	// convert text nodes to tspans, clear spans
 	for (let i = 0; i < el.childNodes.length; i++) {
 		let n = el.childNodes[i];
@@ -69,6 +75,7 @@ function set(el, text, config) {
 		// set explicitly when not aligning (i.e. don't use text's transform)
 		el.childNodes[0].setAttribute('x', config.paddingLeft);
 	}
+	let h = 100;
 	if (config.width) {
 		for (let i = 0; i < el.childNodes.length; i++) {
 			let n = el.childNodes[i];
@@ -102,6 +109,18 @@ function set(el, text, config) {
 				}
 				txt = span.textContent;
 			}
+			let forceResize = el.getBoundingClientRect().height * hpscale > h;
+			// console.log(forceResize, el.getAttribute('font-size'))
+			while (forceResize) {
+				let size = el.getAttribute('font-size');
+				let height = el.getBoundingClientRect().height * hpscale;
+				if (height > h) {
+					el.setAttribute('font-size', size - 1);
+				}else {
+					// console.log(size)
+					forceResize = false
+				}
+			}
 		}
 	}
 
@@ -112,14 +131,14 @@ function set(el, text, config) {
 		el.childNodes[i].style.display = '';
 	}
 
-	if (config.align === 'middle')
-		el.setAttribute('transform', `translate(${config.paddingLeft}, ${-(el.getBoundingClientRect().height - 1.5 * h0) / 2})`)
-	else if (config.align === 'baseline')
-		el.setAttribute('transform', `translate(${config.paddingLeft}, 0)`)
-	else if (config.align === 'bottom')
-		el.setAttribute('transform', `translate(${config.paddingLeft}, ${-(el.getBoundingClientRect().height - h0)})`)
-	else if (config.align === 'top')
-		el.setAttribute('transform', `translate(${config.paddingLeft}, ${h0})`)
+	// if (config.align === 'middle')
+	// 	el.setAttribute('transform', `translate(${config.paddingLeft}, ${-(el.getBoundingClientRect().height - 1.5 * h0) / 2})`)
+	// else if (config.align === 'baseline')
+	// 	el.setAttribute('transform', `translate(${config.paddingLeft}, 0)`)
+	// else if (config.align === 'bottom')
+	// 	el.setAttribute('transform', `translate(${config.paddingLeft}, ${-(el.getBoundingClientRect().height - h0)})`)
+	// else if (config.align === 'top')
+	// 	el.setAttribute('transform', `translate(${config.paddingLeft}, ${h0})`)
 }
 
 /**
