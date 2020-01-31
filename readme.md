@@ -1,12 +1,16 @@
 # Vue 2.x text-wrap-directive for svg text elements
 
+## Based in vue-svg-textwrap 0.0.21
+`https://www.npmjs.com/package/vue-svg-textwrap`
+`https://github.com/lmeysel/vue-svg-textwrap`
+
 ## Install
-`npm install --save vue-svg-textwrap`
+`npm install --save vue-svg-autosizetext`
 
 ## Usage
 Import module via
 ```javascript
-import wrapper from 'vue-svg-textwrap';
+import wrapper from 'vue-svg-autosizetext';
 ```
 
 ... register as directive globally:
