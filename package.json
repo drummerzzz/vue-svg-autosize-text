@@ -1,6 +1,6 @@
 {
 	"name": "vue-svg-autosize-text",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "A vue-directive for svg text elements enabling wrapping and auto size text",
 	"main": "dist/index.js",
 	"files": [
@@ -11,10 +11,10 @@
 		"dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
 		"watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
 		"build": "npm run prod && npm run prod-min && npm run prod-pf && npm run prod-pf-min",
-		"prod": "babel -o dist/index.js -s true --no-comments src/index.js",
-		"prod-min": "babel --minified -o dist/index.min.js -s true --no-comments src/index.js",
-		"prod-pf": "babel -o dist/index.pf.js -s true --no-comments src/index.js",
-		"prod-pf-min": "babel --minified -o dist/index.pf.min.js -s true --no-comments src/index.js"
+		"prod": "./node_modules/.bin/babel -o dist/index.js -s true --no-comments src/index.js",
+		"prod-min": "./node_modules/.bin/babel --minified -o dist/index.min.js -s true --no-comments src/index.js",
+		"prod-pf": "./node_modules/.bin/babel -o dist/index.pf.js -s true --no-comments src/index.js",
+		"prod-pf-min": "./node_modules/.bin/babel --minified -o dist/index.pf.min.js -s true --no-comments src/index.js"
 	},
 	"repository": {
 		"type": "git",
@@ -43,6 +43,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.3.3",
 		"@babel/preset-env": "^7.3.1",
+		"babel-preset-env": "^1.7.0",
 		"browser-sync": "^2.26.3",
 		"browser-sync-webpack-plugin": "^2.2.2",
 		"core-js": "^2.6.5",

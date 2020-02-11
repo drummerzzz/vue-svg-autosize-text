@@ -5,12 +5,12 @@
 `https://github.com/lmeysel/vue-svg-textwrap`
 
 ## Install
-`npm install --save vue-svg-autosizetext`
+`npm install --save vue-svg-autosize-text`
 
 ## Usage
 Import module via
 ```javascript
-import wrapper from 'vue-svg-autosizetext';
+import wrapper from 'vue-svg-autosize-text';
 ```
 
 ... register as directive globally:
@@ -69,6 +69,12 @@ This is how you may override the default line-height, but you can also do so wit
 			<td>The maximum width of the text-element.</td>
 		</tr>
 		<tr>
+			<td>height</td>
+			<td>int</td>
+			<td>(null)</td>
+			<td>The maximum height of the text-element.</td>
+		</tr>
+		<tr>
 			<td>align</td>
 			<td>string</td>
 			<td>'baseline'</td>
@@ -116,7 +122,7 @@ This is how you may override the default line-height, but you can also do so wit
 ## Configuration bindings
 Since 0.0.12 you are able to override the settings with dynamic property values (i.e. bind to instance properties). Using the directive as following you can e.g. bind the width for the text-wrapper: 
 ```html
-<text v-wrapper="{ text: myTextProperty, width: myWidthProperty }" />
+<text v-wrapper="{ text: myTextProperty, width: myWidthProperty, height: myHeightProperty }" />
 ```
 
 ## Physical measurement

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ConfiguredWrapper = exports.default = void 0;
+exports.ConfiguredWrapper = exports["default"] = void 0;
 var SVG_NS = 'http://www.w3.org/2000/svg';
 var alignments = {
   'top': true,
@@ -16,6 +16,7 @@ function getConfig(mod, cfg) {
   var ret = {
     'plain': !cfg.plain ? false : true,
     'width': null || cfg.width,
+    'height': null || cfg.height,
     'align': cfg.align === 'none' || cfg.align === false ? false : alignments[cfg.align] ? cfg.align : 'baseline',
     'lineHeight': cfg.lineHeight || '1.125em',
     'paddingLeft': !cfg.paddingLeft ? !cfg.padding ? 0 : cfg.padding : cfg.paddingLeft,
@@ -42,14 +43,13 @@ function newLine(el, span, config) {
   span.style.display = '';
   tmp.removeAttribute('y');
   tmp.setAttribute('dy', config.lineHeight);
-  if (!config.align) tmp.setAttribute('x', config.paddingLeft);else tmp.setAttribute('x', 0);
+  if (config.x) tmp.setAttribute('x', config.x);
   return tmp;
 }
 
-function set(el, text, config) {
+function resizeWidth(el, text, config) {
   el[config.plain ? 'textContent' : 'innerHTML'] = text || '';
   var pscale = config.physicalMeasurement ? 1 : el.__OWNING_SVG.viewBox.animVal.width / el.__OWNING_SVG.getBoundingClientRect().width;
-  var h0 = el.getBoundingClientRect().height;
   var plain = [];
 
   for (var i = 0; i < el.childNodes.length; i++) {
@@ -68,7 +68,7 @@ function set(el, text, config) {
     }
   }
 
-  if (!config.align) {
+  if (config.align) {
     el.childNodes[0].setAttribute('x', config.paddingLeft);
   }
 
@@ -119,14 +119,35 @@ function set(el, text, config) {
       }
     }
   }
+}
+
+function set(el, text, config) {
+  el[config.plain ? 'textContent' : 'innerHTML'] = text || '';
+  var pscale = config.physicalMeasurement ? 1 : el.__OWNING_SVG.viewBox.animVal.width / el.__OWNING_SVG.getBoundingClientRect().width;
+  el.setAttribute('font-size', 150);
+  resizeWidth(el, text, config);
+
+  if (config.height) {
+    var forceResize = el.getBoundingClientRect().height * pscale > config.height;
+
+    while (forceResize) {
+      var size = el.getAttribute('font-size');
+      var height = el.getBoundingClientRect().height * pscale;
+
+      if (height > config.height) {
+        el.setAttribute('font-size', size - 1);
+      } else {
+        forceResize = false;
+        resizeWidth(el, text, config);
+      }
+    }
+  }
 
   if (!el.childNodes.length) return;
 
   for (var _i3 = 0; _i3 < el.childNodes.length; _i3++) {
     el.childNodes[_i3].style.display = '';
   }
-
-  if (config.align === 'middle') el.setAttribute('transform', "translate(".concat(config.paddingLeft, ", ").concat(-(el.getBoundingClientRect().height - 1.5 * h0) / 2, ")"));else if (config.align === 'baseline') el.setAttribute('transform', "translate(".concat(config.paddingLeft, ", 0)"));else if (config.align === 'bottom') el.setAttribute('transform', "translate(".concat(config.paddingLeft, ", ").concat(-(el.getBoundingClientRect().height - h0), ")"));else if (config.align === 'top') el.setAttribute('transform', "translate(".concat(config.paddingLeft, ", ").concat(h0, ")"));
 }
 
 function directive(config) {
@@ -167,7 +188,7 @@ function directive(config) {
 
 var Wrapper = directive();
 var _default = Wrapper;
-exports.default = _default;
+exports["default"] = _default;
 var ConfiguredWrapper = directive;
 exports.ConfiguredWrapper = ConfiguredWrapper;
 
