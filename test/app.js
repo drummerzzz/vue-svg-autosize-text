@@ -19,11 +19,6 @@ new Vue(Object.assign(appTemplate, {
 		text: null,
 		fmtText: null
 	},
-	// watch: {
-	// 	text: function(a, b){
-	// 		console.log('atualziou')
-	// 	}
-	// },
 	methods: {
 		afterReflow(sender) {
 			console.log('Reflow:', sender);
@@ -31,7 +26,7 @@ new Vue(Object.assign(appTemplate, {
 	},
 	mounted() {
 		window.setTimeout(() => {
-			this.text = 'dkkdkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk kkkkkkkkkkkkkdjddjj j j j j jdjdjdjdjddj jjjjjjjjjjjjjjjjj jjjjjjjjjjjjjjjjj j       ';
+			this.text = 'Qual o prazo para retirar o nome do devedor do SPC/SERASA após quitação da dívida?';
 			this.fmtText = '<tspan style="font-weight:bold">Lorem ipsum, dolor</tspan><tspan fill="red"> sit amet consectetur adipisicing elit. Adipisci</tspan><tspan style="font-style:italic"> enim laudantium, quisrepelle ndusipsum oditremomnisv elitiusto!</tspan> Similique porro sint libero quas, voluptate fugiat aliquid laborum. Non, asperiores.';
 		}, 500);
 	}

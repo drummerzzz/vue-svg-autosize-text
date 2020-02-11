@@ -8,6 +8,10 @@ interface ITextWrapperConfiguration {
 	 */
 	width: Number | null,
 	/**
+	 * The maximum height the text element can flow. Null to ignore width (i.e. does no autosize).
+	 */
+	height: Number | null,
+	/**
 	 * The vertical alignment of the resulting textblock. Use 'none' to avoid touching the
 	 * text-element's transform-property. Otherwise any set value will be overwritten.
 	 */
