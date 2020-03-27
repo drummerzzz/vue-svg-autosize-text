@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ConfiguredWrapper = exports.default = void 0;
+exports.ConfiguredWrapper = exports["default"] = void 0;
 var SVG_NS = 'http://www.w3.org/2000/svg';
 var alignments = {
   'top': true,
@@ -15,6 +15,7 @@ var alignments = {
 function getConfig(mod, cfg) {
   var ret = {
     'plain': !cfg.plain ? false : true,
+    'x': !cfg.x ? 0 : cfg.x,
     'width': null || cfg.width,
     'height': null || cfg.height,
     'align': cfg.align === 'none' || cfg.align === false ? false : alignments[cfg.align] ? cfg.align : 'baseline',
@@ -22,14 +23,12 @@ function getConfig(mod, cfg) {
     'paddingLeft': !cfg.paddingLeft ? !cfg.padding ? 0 : cfg.padding : cfg.paddingLeft,
     'paddingRight': !cfg.paddingRight ? !cfg.padding ? 0 : cfg.padding : cfg.paddingRight,
     'afterReflow': cfg.afterReflow instanceof Function ? cfg.afterReflow : false,
-    'physicalMeasurement': cfg.physicalMeasurement ? true : false,
-    // 'x': cfg.x ? 100 : 500
-    // 'y': !cfg.y ? 0 : cfg.y
+    'physicalMeasurement': cfg.physicalMeasurement ? true : false
   };
   ret._padding = ret.paddingLeft + ret.paddingRight;
 
   for (var k in mod) {
-    if (k === 'plain') ret.plain = true; else if (alignments[k]) {
+    if (k === 'plain') ret.plain = true;else if (alignments[k]) {
       ret.align = k;
     } else if (k === 'none') {
       ret.align = false;
@@ -39,14 +38,18 @@ function getConfig(mod, cfg) {
   return ret;
 }
 
+var fontSize = 150
+
 function newLine(el, span, config) {
   var tmp = span.cloneNode();
   el.insertBefore(tmp, span.nextSibling);
   span.style.display = '';
   tmp.removeAttribute('y');
   tmp.setAttribute('dy', config.lineHeight);
-  if (config.x) tmp.setAttribute('x', config.x);
-  // if (!config.align) tmp.setAttribute('x', config.paddingLeft);else tmp.setAttribute('x', 0);
+  //if (config.x)
+  tmp.setAttribute('x', config.x);
+  // tmp.setAttribute('rx',20)
+  // tmp.setAttribute('ry', 20)
   return tmp;
 }
 
@@ -71,9 +74,9 @@ function resizeWidth(el, text, config) {
     }
   }
 
-  if (config.align) {
-    el.childNodes[0].setAttribute('x', config.paddingLeft);
-  }
+  // if (config.align) {
+  //   el.childNodes[0].setAttribute('x', config.paddingLeft);
+  // }
 
   if (config.width) {
     for (var _i = 0; _i < el.childNodes.length; _i++) {
@@ -91,21 +94,19 @@ function resizeWidth(el, text, config) {
     }
 
     var offset = 0,
-      w = config.width - config._padding,
-      // t = w
-      childCnt = el.childElementCount;
+        w = config.width - config._padding,
+        childCnt = el.childElementCount;
 
     for (var c = 0; c < childCnt; c++) {
       var words = plain[c];
       var wc = words.length,
-        span = el.childNodes[c + offset],
-        txt = '',
-        forceBreak = false;
+          span = el.childNodes[c + offset],
+          txt = '',
+          forceBreak = false;
 
       for (var _i2 = 0; _i2 < wc; _i2++) {
         span.textContent += _i2 ? ' ' + words[_i2] : words[_i2];
         forceBreak = el.getBoundingClientRect().width * pscale > w;
-        // forceResize = el.getBoundingClientRect(). * pscale > h;
 
         while (forceBreak) {
           span.textContent = txt;
@@ -128,21 +129,22 @@ function resizeWidth(el, text, config) {
 
 function set(el, text, config) {
   el[config.plain ? 'textContent' : 'innerHTML'] = text || '';
-  var pscale = config.physicalMeasurement ? 1 : el.__OWNING_SVG.viewBox.animVal.width / el.__OWNING_SVG.getBoundingClientRect().width;
-  el.setAttribute('font-size', 150)
-
-  resizeWidth(el, text, config)
+  var pscale = config.physicalMeasurement ? 1 : el.__OWNING_SVG.viewBox.animVal.height / el.__OWNING_SVG.getBoundingClientRect().height;
+  el.setAttribute('font-size', 150);
+  resizeWidth(el, text, config);
 
   if (config.height) {
-    let forceResize = el.getBoundingClientRect().height * pscale > config.height;
+    var forceResize = el.getBoundingClientRect().height * pscale > config.height;
+
     while (forceResize) {
-      let size = el.getAttribute('font-size');
-      let height = el.getBoundingClientRect().height * pscale;
+      var size = el.getAttribute('font-size');
+      var height = el.getBoundingClientRect().height * pscale;
+
       if (height > config.height) {
-        el.setAttribute('font-size', size - 1);
+        el.setAttribute('font-size', size -1);
       } else {
-        forceResize = false
-        resizeWidth(el, text,config)
+        forceResize = false;
+        resizeWidth(el, text, config);
       }
     }
   }
@@ -152,13 +154,9 @@ function set(el, text, config) {
   for (var _i3 = 0; _i3 < el.childNodes.length; _i3++) {
     el.childNodes[_i3].style.display = '';
   }
-
-  // if (config.align === 'middle') el.setAttribute('transform', "translate(".concat(config.paddingLeft, ", ").concat(-(el.getBoundingClientRect().height - 1.5 * h0) / 2, ")"));else if (config.align === 'baseline') el.setAttribute('transform', "translate(".concat(config.paddingLeft, ", 0)"));else if (config.align === 'bottom') el.setAttribute('transform', "translate(".concat(config.paddingLeft, ", ").concat(-(el.getBoundingClientRect().height - h0), ")"));else if (config.align === 'top') el.setAttribute('transform', "translate(".concat(config.paddingLeft, ", ").concat(h0, ")"));
+  el.setAttribute('x', config.x);
+  fontSize = el.getAttribute('font-size')
 }
-
-// function resizeWidth (config) {
-
-// }
 
 function directive(config) {
   if (!config) config = {};
@@ -175,7 +173,7 @@ function directive(config) {
       r.update.apply(this, arguments);
     },
     update: function update(el, binding, _ref) {
-      var context = _ref.context; 
+      var context = _ref.context;
 
       if (binding.value != binding.oldValue) {
         var cfg = el.__WRAP_CONFIG;
@@ -192,14 +190,15 @@ function directive(config) {
     unbind: function unbind(el) {
       delete el.__WRAP_CONFIG;
     }
-  };  
+  };
   return r;
 }
 
 var Wrapper = directive();
 var _default = Wrapper;
-exports.default = _default;
+exports["default"] = _default;
 var ConfiguredWrapper = directive;
 exports.ConfiguredWrapper = ConfiguredWrapper;
-
+exports.wrapper = _default
+exports.fontSize = fontSize
 //# sourceMappingURL=index.js.map

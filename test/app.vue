@@ -6,7 +6,7 @@
 				<text  font-size="50" v-wrap.400="text"></text>
 			</g> -->
 			<g transform="translate(300, 10)">
-				<text  font-size="50" v-wrap="{ physicalMeasurement: false, text: text, width: 400}"></text>
+				<text  font-size="50" v-wrap="{ physicalMeasurement: false, text: text, width: 400, height: 100}"></text>
 			</g>
 		</svg>
 	</div>

@@ -12,7 +12,6 @@ Import module via
 ```javascript
 import wrapper from 'vue-svg-autosize-text';
 ```
-
 ... register as directive globally:
 ```javascript
 Vue.directive('textwrap', wrapper);
@@ -21,6 +20,19 @@ Vue.directive('textwrap', wrapper);
 ```javascript
 directives: {
   wrapper
+}
+```
+... or import with fontSize var type int
+```javascript
+import { wrapper, fontSize } from 'vue-svg-autosize-text';
+```
+
+... and use in data:
+```javascript
+data () {
+    return {
+	  fs: fontSize
+	}
 }
 ```
 ... and then in your vue template:
@@ -122,7 +134,7 @@ This is how you may override the default line-height, but you can also do so wit
 ## Configuration bindings
 Since 0.0.12 you are able to override the settings with dynamic property values (i.e. bind to instance properties). Using the directive as following you can e.g. bind the width for the text-wrapper: 
 ```html
-<text v-wrapper="{ text: myTextProperty, width: myWidthProperty, height: myHeightProperty }" />
+<text v-wrapper="{ text: myTextProperty, width: myWidthProperty, height: myHeightProperty, x: myXtextProperty }" />
 ```
 
 ## Physical measurement

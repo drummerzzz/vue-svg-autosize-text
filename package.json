@@ -1,6 +1,6 @@
 {
 	"name": "vue-svg-autosize-text",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "A vue-directive for svg text elements enabling wrapping and auto size text",
 	"main": "dist/index.js",
 	"files": [

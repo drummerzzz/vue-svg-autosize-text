@@ -11,6 +11,7 @@ new Vue(Object.assign(appTemplate, {
 		}),
 		wrapPad: ConfiguredWrapper({
 			width: 200,
+			height: 200,
 			padding: 20
 		})
 	},

@@ -15,6 +15,7 @@ var alignments = {
 function getConfig(mod, cfg) {
   var ret = {
     'plain': !cfg.plain ? false : true,
+    'x': !cfg.x ? 0 : cfg.x,
     'width': null || cfg.width,
     'height': null || cfg.height,
     'align': cfg.align === 'none' || cfg.align === false ? false : alignments[cfg.align] ? cfg.align : 'baseline',
@@ -37,13 +38,15 @@ function getConfig(mod, cfg) {
   return ret;
 }
 
+var fontSize = 150;
+
 function newLine(el, span, config) {
   var tmp = span.cloneNode();
   el.insertBefore(tmp, span.nextSibling);
   span.style.display = '';
   tmp.removeAttribute('y');
   tmp.setAttribute('dy', config.lineHeight);
-  if (config.x) tmp.setAttribute('x', config.x);
+  tmp.setAttribute('x', config.x);
   return tmp;
 }
 
@@ -66,10 +69,6 @@ function resizeWidth(el, text, config) {
       plain.push(n.textContent.split(/\s/));
       n.textContent = '';
     }
-  }
-
-  if (config.align) {
-    el.childNodes[0].setAttribute('x', config.paddingLeft);
   }
 
   if (config.width) {
@@ -123,7 +122,7 @@ function resizeWidth(el, text, config) {
 
 function set(el, text, config) {
   el[config.plain ? 'textContent' : 'innerHTML'] = text || '';
-  var pscale = config.physicalMeasurement ? 1 : el.__OWNING_SVG.viewBox.animVal.width / el.__OWNING_SVG.getBoundingClientRect().width;
+  var pscale = config.physicalMeasurement ? 1 : el.__OWNING_SVG.viewBox.animVal.height / el.__OWNING_SVG.getBoundingClientRect().height;
   el.setAttribute('font-size', 150);
   resizeWidth(el, text, config);
 
@@ -148,6 +147,9 @@ function set(el, text, config) {
   for (var _i3 = 0; _i3 < el.childNodes.length; _i3++) {
     el.childNodes[_i3].style.display = '';
   }
+
+  el.setAttribute('x', config.x);
+  fontSize = el.getAttribute('font-size');
 }
 
 function directive(config) {
@@ -191,5 +193,7 @@ var _default = Wrapper;
 exports["default"] = _default;
 var ConfiguredWrapper = directive;
 exports.ConfiguredWrapper = ConfiguredWrapper;
+exports.wrapper = _default;
+exports.fontSize = fontSize;
 
 //# sourceMappingURL=index.js.map
